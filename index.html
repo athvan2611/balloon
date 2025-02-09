@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ballon Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Balloon Burst Game</h1>
+    <div id="game-container">
+        <div class="balloon" id="balloonA" style="left: 50px;">
+            <img src="Graphics/a.png" alt="Balloon A">
+            <img src="Graphics/orange.png" id="ball" alt="">
+        </div>
+        <div class="balloon" id="balloonB" style="left: 100px;">
+            <img src="Graphics/b.png" alt="Balloon B">
+            <img src="Graphics/blue.png" id="ball" alt="">
+        </div>
+        <div class="balloon" id="balloonC" style="left: 150px;">
+            <img src="Graphics/c.png" alt="Balloon C">
+            <img src="Graphics/yellow.png" id="ball" alt="">
+        </div>
+        <div class="balloon" id="balloonD" style="left: 200px;">
+            <img src="Graphics/d.png" alt="Balloon d">
+            <img src="Graphics/red.png" id="ball" alt="">
+
+        </div>
+        <!-- <div class="balloon" id="balloonE" style="left: 250px;">
+            <img src="Graphics/e.png" alt="Balloon d">
+        </div><div class="balloon" id="balloonF" style="left: 300px;">
+            <img src="Graphics/f.png" alt="Balloon d">
+        -->
+        <div id="pump-container">
+            <img id="pump-handle" src="Graphics/handel.png" alt="Pump Handle">
+            <img id="pump-base" src="Graphics/pump.png" alt="Pump Base">
+        </div>
+    </div>
+   
+    <audio id="pump-sound" src="pump.mp3"></audio>
+    <audio id="pop-sound" src="pop.mp3"></audio>
+
+    <script>
+        let balloons = document.querySelectorAll(".balloon");
+        let pumpHandle = document.getElementById("pump-handle");
+        let pumpSound = document.getElementById("pump-sound");
+        let popSound = document.getElementById("pop-sound");
+        let size = { A: 50, B: 50, C: 50, D:50, E:50, F:50 };
+        let isFlying = { A: false, B: false, C: false, D: false, E:false, F:false };
+        
+        pumpHandle.addEventListener("click", function() {
+            pumpHandle.style.transform = "translateX(-50%) translateY(30px)";
+            pumpSound.play();
+            setTimeout(() => pumpHandle.style.transform = "translateX(-50%) translateY(0)", 150);
+            
+            balloons.forEach(balloon => {
+                let id = balloon.id.replace("balloon", "");
+                if (size[id] < 150) {
+                    size[id] += 10;
+                    balloon.style.transform = `scale(${size[id] / 50})`;
+                } else {
+                    isFlying[id] = true;
+                    balloon.classList.add("floating");
+                }
+            });
+        });
+
+        balloons.forEach(balloon => {
+            balloon.addEventListener("click", function() {
+                let id = balloon.id.replace("balloon", "");
+                if (isFlying[id]) {
+                    balloon.style.transition = "transform 0.1s ease-out";
+                    balloon.style.transform = "scale(0)";
+                    popSound.play();
+                    setTimeout(() => balloon.remove(), 100);
+                }
+            });
+        });
+    </script>
+
+</body>
+
+
+
+</html>
